@@ -1,0 +1,13 @@
+package com.example.githubexplorer.ui.navigation
+
+import kotlinx.serialization.Serializable
+
+/**
+ * 路由定义，使用 type-safe navigation
+ * 后续逐步添加 Search、RepoDetail、UserProfile、Bookmark
+ */
+@Serializable
+sealed interface Route {
+    @Serializable
+    data object Home : Route
+}
