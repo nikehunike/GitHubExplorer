@@ -58,4 +58,8 @@ class GithubRepository @Inject constructor(
     suspend fun getUserRepos(username: String): Result<List<RepoDto>> = runCatching {
         api.getUserRepos(username)
     }
+
+    suspend fun getTrendingRepos(): Result<List<RepoDto>> = runCatching {
+        api.searchRepos(query = "stars:>1000", sort = "stars", order = "desc", perPage = 30).items
+    }
 }

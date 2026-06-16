@@ -26,7 +26,10 @@ fun AppNavHost(
         composable<Route.Home> {
             HomeScreen(
                 onNavigateToSearch = { navController.navigate(Route.Search) },
-                onNavigateToBookmarks = { navController.navigate(Route.Bookmark) }
+                onNavigateToBookmarks = { navController.navigate(Route.Bookmark) },
+                onRepoClick = { owner, repo ->
+                    navController.navigate(Route.RepoDetail(owner, repo))
+                }
             )
         }
 
