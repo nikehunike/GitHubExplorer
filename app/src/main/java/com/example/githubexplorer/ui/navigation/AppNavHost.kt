@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.githubexplorer.ui.home.HomeScreen
+import com.example.githubexplorer.ui.search.SearchScreen
 
 @Composable
 fun AppNavHost(
@@ -19,7 +20,17 @@ fun AppNavHost(
         modifier = modifier
     ) {
         composable<Route.Home> {
-            HomeScreen()
+            HomeScreen(
+                onNavigateToSearch = {
+                    navController.navigate(Route.Search)
+                }
+            )
+        }
+
+        composable<Route.Search> {
+            SearchScreen(
+                onBack = { navController.popBackStack() }
+            )
         }
     }
 }
