@@ -19,6 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -53,6 +55,7 @@ fun RepoDetailScreen(
     viewModel: RepoDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isBookmarked by viewModel.isBookmarked.collectAsStateWithLifecycle()
 
     LaunchedEffect(owner, repo) {
         viewModel.loadRepo(owner, repo)
@@ -67,6 +70,17 @@ fun RepoDetailScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "返回"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { viewModel.toggleBookmark() }) {
+                        Icon(
+                            imageVector = if (isBookmarked) Icons.Filled.Star
+                                          else Icons.Filled.StarBorder,
+                            contentDescription = if (isBookmarked) "取消收藏" else "收藏",
+                            tint = if (isBookmarked) MaterialTheme.colorScheme.primary
+                                   else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 },
@@ -91,10 +105,7 @@ fun RepoDetailScreen(
                     modifier = Modifier.fillMaxSize().padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = state.message,
-                        color = MaterialTheme.colorScheme.error
-                    )
+                    Text(text = state.message, color = MaterialTheme.colorScheme.error)
                 }
             }
 
@@ -109,14 +120,11 @@ fun RepoDetailScreen(
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // 头像 + 名称
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         AsyncImage(
                             model = detail.owner.avatarUrl,
                             contentDescription = null,
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(CircleShape),
+                            modifier = Modifier.size(48.dp).clip(CircleShape),
                             contentScale = ContentScale.Crop
                         )
                         Spacer(modifier = Modifier.width(12.dp))
@@ -134,7 +142,6 @@ fun RepoDetailScreen(
                         }
                     }
 
-                    // 描述
                     if (!detail.description.isNullOrBlank()) {
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
@@ -144,18 +151,16 @@ fun RepoDetailScreen(
                         )
                     }
 
-                    // 统计
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-                        StatItem(label = "Stars", value = formatCount(detail.stars))
-                        StatItem(label = "Forks", value = formatCount(detail.forks))
-                        StatItem(label = "Watchers", value = formatCount(detail.watchers))
+                        StatItem("Stars", formatCount(detail.stars))
+                        StatItem("Forks", formatCount(detail.forks))
+                        StatItem("Watchers", formatCount(detail.watchers))
                         if (!detail.language.isNullOrBlank()) {
-                            StatItem(label = "Language", value = detail.language)
+                            StatItem("Language", detail.language)
                         }
                     }
 
-                    // Topics
                     if (detail.topics.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(12.dp))
                         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -175,7 +180,6 @@ fun RepoDetailScreen(
                         }
                     }
 
-                    // 许可证
                     if (detail.license != null) {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
@@ -185,7 +189,6 @@ fun RepoDetailScreen(
                         )
                     }
 
-                    // README
                     if (!state.readmeMarkdown.isNullOrBlank()) {
                         Spacer(modifier = Modifier.height(20.dp))
                         HorizontalDivider()

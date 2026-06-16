@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun HomeScreen(
     onNavigateToSearch: () -> Unit = {},
+    onNavigateToBookmarks: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     Scaffold(
@@ -56,6 +57,10 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = onNavigateToSearch) {
                 Text("搜索仓库")
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(onClick = onNavigateToBookmarks) {
+                Text("我的收藏")
             }
         }
     }

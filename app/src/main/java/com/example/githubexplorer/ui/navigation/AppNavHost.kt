@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.example.githubexplorer.ui.bookmark.BookmarkScreen
 import com.example.githubexplorer.ui.detail.RepoDetailScreen
 import com.example.githubexplorer.ui.home.HomeScreen
 import com.example.githubexplorer.ui.search.SearchScreen
@@ -23,9 +24,8 @@ fun AppNavHost(
     ) {
         composable<Route.Home> {
             HomeScreen(
-                onNavigateToSearch = {
-                    navController.navigate(Route.Search)
-                }
+                onNavigateToSearch = { navController.navigate(Route.Search) },
+                onNavigateToBookmarks = { navController.navigate(Route.Bookmark) }
             )
         }
 
@@ -44,6 +44,15 @@ fun AppNavHost(
                 owner = route.owner,
                 repo = route.repo,
                 onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable<Route.Bookmark> {
+            BookmarkScreen(
+                onBack = { navController.popBackStack() },
+                onRepoClick = { owner, repo ->
+                    navController.navigate(Route.RepoDetail(owner, repo))
+                }
             )
         }
     }

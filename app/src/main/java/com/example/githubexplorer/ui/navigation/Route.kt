@@ -16,4 +16,7 @@ sealed interface Route {
 
     @Serializable
     data class RepoDetail(val owner: String, val repo: String) : Route
+
+    @Serializable
+    data object Bookmark : Route
 }

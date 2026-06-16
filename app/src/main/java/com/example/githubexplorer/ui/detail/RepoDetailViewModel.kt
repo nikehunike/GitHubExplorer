@@ -4,6 +4,7 @@ import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.githubexplorer.data.remote.dto.RepoDetailDto
 import com.example.githubexplorer.data.repository.GithubRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -25,6 +26,11 @@ class RepoDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<RepoDetailUiState>(RepoDetailUiState.Loading)
     val uiState: StateFlow<RepoDetailUiState> = _uiState.asStateFlow()
 
+    private val _isBookmarked = MutableStateFlow(false)
+    val isBookmarked: StateFlow<Boolean> = _isBookmarked.asStateFlow()
+
+    private var currentDetail: RepoDetailDto? = null
+
     fun loadRepo(owner: String, repo: String) {
         viewModelScope.launch {
             _uiState.value = RepoDetailUiState.Loading
@@ -39,8 +45,11 @@ class RepoDetailViewModel @Inject constructor(
 
                 detailResult
                     .onSuccess { detail ->
+                        currentDetail = detail
                         _uiState.value = RepoDetailUiState.Success(detail, readmeMarkdown)
                         Log.i(TAG, "仓库详情加载成功: ${detail.fullName}")
+                        // 拿到 id 后查收藏状态
+                        checkBookmarkStatus(detail.id)
                     }
                     .onFailure { e ->
                         _uiState.value = RepoDetailUiState.Error(
@@ -53,6 +62,23 @@ class RepoDetailViewModel @Inject constructor(
                 Log.e(TAG, "加载失败", e)
             }
         }
+    }
+
+    fun toggleBookmark() {
+        val detail = currentDetail ?: return
+        viewModelScope.launch {
+            if (_isBookmarked.value) {
+                repository.removeBookmark(detail.id)
+                _isBookmarked.value = false
+            } else {
+                repository.addBookmark(detail)
+                _isBookmarked.value = true
+            }
+        }
+    }
+
+    private suspend fun checkBookmarkStatus(repoId: Long) {
+        _isBookmarked.value = repository.isBookmarked(repoId)
     }
 
     private fun decodeBase64(content: String): String {
