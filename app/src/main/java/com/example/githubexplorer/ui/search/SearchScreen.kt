@@ -34,6 +34,7 @@ import com.example.githubexplorer.ui.component.RepoListItem
 fun SearchScreen(
     onBack: () -> Unit,
     onRepoClick: (owner: String, repo: String) -> Unit = { _, _ -> },
+    onUserClick: (String) -> Unit = {},
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -110,7 +111,8 @@ fun SearchScreen(
                                     if (parts.size == 2) {
                                         onRepoClick(parts[0], parts[1])
                                     }
-                                }
+                                },
+                                onUserClick = { onUserClick(it) }
                             )
                         }
                     }

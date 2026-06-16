@@ -11,6 +11,7 @@ import com.example.githubexplorer.ui.bookmark.BookmarkScreen
 import com.example.githubexplorer.ui.detail.RepoDetailScreen
 import com.example.githubexplorer.ui.home.HomeScreen
 import com.example.githubexplorer.ui.search.SearchScreen
+import com.example.githubexplorer.ui.user.UserProfileScreen
 
 @Composable
 fun AppNavHost(
@@ -34,6 +35,9 @@ fun AppNavHost(
                 onBack = { navController.popBackStack() },
                 onRepoClick = { owner, repo ->
                     navController.navigate(Route.RepoDetail(owner, repo))
+                },
+                onUserClick = { username ->
+                    navController.navigate(Route.UserProfile(username))
                 }
             )
         }
@@ -43,7 +47,10 @@ fun AppNavHost(
             RepoDetailScreen(
                 owner = route.owner,
                 repo = route.repo,
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onUserClick = { username ->
+                    navController.navigate(Route.UserProfile(username))
+                }
             )
         }
 
@@ -52,6 +59,23 @@ fun AppNavHost(
                 onBack = { navController.popBackStack() },
                 onRepoClick = { owner, repo ->
                     navController.navigate(Route.RepoDetail(owner, repo))
+                },
+                onUserClick = { username ->
+                    navController.navigate(Route.UserProfile(username))
+                }
+            )
+        }
+
+        composable<Route.UserProfile> { backStackEntry ->
+            val route = backStackEntry.toRoute<Route.UserProfile>()
+            UserProfileScreen(
+                username = route.username,
+                onBack = { navController.popBackStack() },
+                onRepoClick = { owner, repo ->
+                    navController.navigate(Route.RepoDetail(owner, repo))
+                },
+                onUserClick = { username ->
+                    navController.navigate(Route.UserProfile(username))
                 }
             )
         }

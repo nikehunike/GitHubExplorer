@@ -1,5 +1,6 @@
 package com.example.githubexplorer.ui.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,7 +33,8 @@ import com.example.githubexplorer.data.remote.dto.RepoDto
 fun RepoListItem(
     repo: RepoDto,
     modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
+    onUserClick: ((String) -> Unit)? = null
 ) {
     Card(
         onClick = onClick ?: {},
@@ -54,7 +56,10 @@ fun RepoListItem(
                 contentDescription = "${repo.owner.login} 的头像",
                 modifier = Modifier
                     .size(40.dp)
-                    .clip(CircleShape),
+                    .clip(CircleShape)
+                    .clickable(enabled = onUserClick != null) {
+                        onUserClick?.invoke(repo.owner.login)
+                    },
                 contentScale = ContentScale.Crop
             )
 

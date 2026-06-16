@@ -1,5 +1,6 @@
 package com.example.githubexplorer.ui.bookmark
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ import com.example.githubexplorer.data.local.entity.BookmarkEntity
 fun BookmarkScreen(
     onBack: () -> Unit,
     onRepoClick: (String, String) -> Unit = { _, _ -> },
+    onUserClick: (String) -> Unit = {},
     viewModel: BookmarkViewModel = hiltViewModel()
 ) {
     val bookmarks by viewModel.bookmarks.collectAsStateWithLifecycle()
@@ -90,7 +92,8 @@ fun BookmarkScreen(
                         onClick = {
                             val parts = bookmark.fullName.split("/")
                             if (parts.size == 2) onRepoClick(parts[0], parts[1])
-                        }
+                        },
+                        onUserClick = onUserClick
                     )
                 }
             }
@@ -101,7 +104,8 @@ fun BookmarkScreen(
 @Composable
 private fun BookmarkListItem(
     bookmark: BookmarkEntity,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onUserClick: (String) -> Unit = {}
 ) {
     Card(
         onClick = onClick,
@@ -117,7 +121,10 @@ private fun BookmarkListItem(
             AsyncImage(
                 model = bookmark.ownerAvatar,
                 contentDescription = null,
-                modifier = Modifier.size(36.dp).clip(CircleShape),
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .clickable { onUserClick(bookmark.ownerLogin) },
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.width(12.dp))

@@ -6,6 +6,7 @@ import com.example.githubexplorer.data.remote.GitHubApi
 import com.example.githubexplorer.data.remote.dto.RepoDetailDto
 import com.example.githubexplorer.data.remote.dto.RepoDto
 import com.example.githubexplorer.data.remote.dto.ReadmeDto
+import com.example.githubexplorer.data.remote.dto.UserDto
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -49,4 +50,12 @@ class GithubRepository @Inject constructor(
     }
 
     suspend fun removeBookmark(repoId: Long) = bookmarkDao.delete(repoId)
+
+    suspend fun getUser(username: String): Result<UserDto> = runCatching {
+        api.getUser(username)
+    }
+
+    suspend fun getUserRepos(username: String): Result<List<RepoDto>> = runCatching {
+        api.getUserRepos(username)
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.githubexplorer.ui.detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -124,7 +125,10 @@ fun RepoDetailScreen(
                         AsyncImage(
                             model = detail.owner.avatarUrl,
                             contentDescription = null,
-                            modifier = Modifier.size(48.dp).clip(CircleShape),
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape)
+                                .clickable { onUserClick(detail.owner.login) },
                             contentScale = ContentScale.Crop
                         )
                         Spacer(modifier = Modifier.width(12.dp))
@@ -137,7 +141,8 @@ fun RepoDetailScreen(
                             Text(
                                 text = detail.owner.login,
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.clickable { onUserClick(detail.owner.login) }
                             )
                         }
                     }

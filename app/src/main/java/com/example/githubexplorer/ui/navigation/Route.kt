@@ -19,4 +19,7 @@ sealed interface Route {
 
     @Serializable
     data object Bookmark : Route
+
+    @Serializable
+    data class UserProfile(val username: String) : Route
 }
