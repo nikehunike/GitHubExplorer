@@ -84,4 +84,7 @@ dependencies {
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+
+    // Markdown
+    implementation(libs.markdown.compose.m3)
 }

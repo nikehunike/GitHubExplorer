@@ -36,12 +36,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.mikepenz.markdown.m3.Markdown
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -196,13 +196,7 @@ fun RepoDetailScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = state.readmeMarkdown,
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontFamily = FontFamily.Monospace
-                            ),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        Markdown(content = state.readmeMarkdown)
                     }
                 }
             }
